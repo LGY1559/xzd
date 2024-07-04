@@ -59,7 +59,7 @@ const options = computed(() => ({
   grid: {
     left: 0,
     right: 0,
-    top: 50,
+    top: 30,
     bottom: 0
   },
   xAxis: {
@@ -107,6 +107,7 @@ const options = computed(() => ({
 .weather {
   padding: 2rem;
   background-color: rgb(0 78 113);
+  margin-top: 0.5rem;
 }
 ul {
   width: 25%;

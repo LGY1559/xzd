@@ -1,8 +1,8 @@
 <template>
-  <p class="text-center text-white title">你正在预览{{ cityName }}的天气</p>
-  <i v-if="!isCityAlreadySaved" class="iconfont icon-tianjia" @click="saveToLocalStorage"></i>
+  <p class="text-center text-white title">你正在预览{{ cityName }}的天气信息，可以通过右上角"+"号保存起来</p>
+  <i v-if="!isCityAlreadySaved" class="iconfont icon-tianjia add " @click="saveToLocalStorage"></i>
   <div class="text-white citytem">
-    <div class="text-center">
+    <div class="text-center tem-box">
       <p>当日气温是：{{ nowtemp }}摄氏度</p>
       <p>当日天气是：{{ nowweather }}</p>
       <p>当日风向是：{{ nowwind }}</p>
@@ -118,11 +118,11 @@ const saveToLocalStorage = () => {
 }
 </script>
 
-<style scoped>
-i{
+<style scoped lang="scss">
+.add{
   position: absolute;
   top: 1.5rem;
-  right: 15rem;
+  right: 17%;
   color: white;
   font-size: 1.5rem;
   cursor: pointer;
@@ -140,5 +140,16 @@ i{
 
 .citytem {
   margin-top: 3rem;
+}
+.tem-box{
+  p{
+    margin-bottom: 1rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .title {
+    top: 8rem; /* 当屏幕宽度小于640px时，margin-top改为7rem */
+  }
 }
 </style>

@@ -108,7 +108,10 @@ a {
 i {
   font-size: 24px;
 }
-
+.icon-tishi_mian:hover {
+  color: rgb(0 78 113);
+  transition: all 0.5s;
+}
 .popup {
   position: fixed;
   top: 0;

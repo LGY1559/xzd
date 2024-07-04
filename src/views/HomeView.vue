@@ -1,6 +1,6 @@
 <template>
   <Cityfind/>
-  <h2 class="text-white">近期天气</h2>
+  <h2 class="text-white" style="margin: 1rem 0 0 0;">近期天气</h2>
   <WeatherDisplay
     :day0="day0"
     :day1="day1"
@@ -69,9 +69,3 @@ onMounted(() => {
   }
 })
 </script>
-
-<style scoped>
-h2{
-  margin-top: 2.5rem;
-}
-</style>
