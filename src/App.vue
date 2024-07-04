@@ -7,7 +7,6 @@ import WeatherHead from './components/WeatherHead.vue'
 <template>
     <WeatherHead class="head"/>
     <div>
-
       <RouterView/>
     </div>
 </template>
