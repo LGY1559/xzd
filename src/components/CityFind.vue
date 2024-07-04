@@ -1,26 +1,35 @@
 <template>
   <div class="text-white">
-    <input type="text" placeholder="请输入城市名称" v-model="inputCity" @input="handleInput" />
-    <div class="scarch" v-if="showSearchResults">
-      <p v-if="searchResults.length === 0">似乎没有找到你查找的城市</p>
-      <p v-else v-for="result in searchResults" :key="result.id" @click="handleCityClick(result)">
-        {{ result.name }}
+    <!-- 输入框，用于输入城市名称，绑定到 weatherStore 的 inputCity 属性，并监听输入事件 -->
+    <input type="text" placeholder="请输入城市名称" v-model="weatherStore.inputCity" @input="weatherStore.handleInput" />
+    <!-- 搜索结果显示区域，当 showSearchResults 为 true 时显示 -->
+    <div class="scarch" v-if="weatherStore.showSearchResults">
+      <!-- 如果没有搜索结果，显示提示信息 -->
+      <p v-if="weatherStore.searchResults.length === 0">似乎没有找到你查找的城市</p>
+      <!-- 如果有搜索结果，显示每个结果，并监听点击事件 -->
+      <p v-else v-for="result in weatherStore.searchResults" :key="result.id" @click="handleCityClick(result)">
+        &nbsp;&nbsp;&nbsp;{{ result.name }}
       </p>
-      <p v-if="networkError">网络似乎有点问题，请尝试重新输入</p>
+      <!-- 如果网络错误，显示提示信息 -->
+      <p v-if="weatherStore.networkError">网络似乎有点问题，请尝试重新输入</p>
     </div>
     <div>
-      <div v-if="savedCities.length > 0" class="font-white gap-3" style="margin-top: 20px">
-        <div v-for="(city, index) in savedCities" :key="index" class="city-item">
+      <!-- 如果保存的城市列表不为空，显示每个保存的城市信息 -->
+      <div v-if="weatherStore.savedCities.length > 0" class="font-white gap-3" style="margin-top: 20px">
+        <div v-for="(city, index) in weatherStore.savedCities" :key="index" class="city-item">
           <div class="city-item-data">
             <span>{{ city.cityName }}</span>
             <span>{{ city.nowtemp }}℃</span>
           </div>
-          <div class="city-item-btn">
+          <div class="city-item-btn ">
+            <!-- 查看城市天气按钮 -->
             <button class="btn font-white" @click="viewCityWeather(city)">查看</button>
-            <button class="btn font-white" @click="deleteCity(index)">删除</button>
+            <!-- 删除城市按钮 -->
+            <button class="btn font-white" @click="weatherStore.deleteCity(index)">删除</button>
           </div>
         </div>
       </div>
+      <!-- 如果保存的城市列表为空，显示提示信息 -->
       <h2 v-else class="text-white text-center">
         暂时没有保存过城市天气信息,请查询后点击左上角"+"号保存
       </h2>
@@ -29,49 +38,16 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { getCity } from '../api/index.js'
+import { useWeatherStore } from '../stores/weather'
 
-const inputCity = ref('')
-const searchResults = ref([])
-const showSearchResults = ref(false)
-const networkError = ref(false)
 const router = useRouter()
-const savedCities = ref([])
+const weatherStore = useWeatherStore()
 
-const handleInput = async () => {
-  // 获取输入的城市名称
-  const city = inputCity.value
-  if (city) {
-    try {
-      // 调用获取城市信息的API
-      const response = await getCity(city)
-      // 处理并展示搜索结果
-      searchResults.value = response.data.geocodes.map((geo, index) => ({
-        id: index,
-        name: geo.city,
-        adcode: geo.adcode
-      }))
-      showSearchResults.value = true
-      networkError.value = false
-    } catch (error) {
-      // 处理网络错误
-      console.error('Error fetching city data:', error)
-      searchResults.value = []
-      showSearchResults.value = true
-      networkError.value = true
-    }
-  } else {
-    // 清空搜索结果
-    searchResults.value = []
-    showSearchResults.value = false
-    networkError.value = false
-  }
-}
-
+// 处理城市点击事件，跳转到天气页面并传递城市信息
 const handleCityClick = (result) => {
   console.log('Adcode:', result.adcode)
+  weatherStore.clearInput() // 清空输入框
   router.push({
     name: 'weather',
     params: { adcode: result.adcode },
@@ -79,6 +55,7 @@ const handleCityClick = (result) => {
   })
 }
 
+// 查看城市天气，跳转到天气页面并传递城市信息
 const viewCityWeather = (city) => {
   router.push({
     name: 'weather',
@@ -86,21 +63,6 @@ const viewCityWeather = (city) => {
     query: { name: city.cityName }
   })
 }
-
-const deleteCity = (index) => {
-  // 从 savedCities 数组中删除对应的城市数据
-  savedCities.value.splice(index, 1)
-
-  // 将更新后的 savedCities 数组保存回 localStorage
-  localStorage.setItem('weatherData', JSON.stringify(savedCities.value))
-}
-
-onMounted(() => {
-  const savedCitiesData = localStorage.getItem('weatherData')
-  if (savedCitiesData) {
-    savedCities.value = JSON.parse(savedCitiesData)
-  }
-})
 </script>
 
 <style scoped lang="scss">
@@ -150,9 +112,6 @@ h2 {
 
     span {
       display: block;
-      font-size: 16px;
-      font-weight: 500;
-      margin: 0 20px;
     }
   }
 
@@ -163,7 +122,6 @@ h2 {
     .btn {
       width: 60px;
       height: 36px;
-      font-size: 16px;
       line-height: 36px;
       text-align: center;
       margin: 0 5px;

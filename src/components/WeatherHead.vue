@@ -1,14 +1,14 @@
 <template>
   <div class="head flex">
     <div class="flex items-center gap-3">
-      <RouterLink to="/" class="flex flex-col sm:flex-row items-center gap-4 text-white py-6">
+      <RouterLink to="/" class="flex flex-col sm:flex-row items-center gap-4 text-white py-6" @click="refresh">
         <i class="iconfont icon-sun2"></i>
         <span class="text-2xl">LGY天气</span>
       </RouterLink>
       <div class="gap-4 flex items-center">
-        <span class="text-lg">{{ city }}</span>
+        <span class="text-lg">{{ weatherStore.cityName }}</span>
         <span class="text-sm"
-          >实时天气：{{ weather }} {{ temperature }}°C {{ winddirection }} {{ windpower }}</span
+          >实时天气：{{ weatherStore.nowweather }} {{ weatherStore.nowtemp }}°C {{ weatherStore.nowwind }} {{ weatherStore.nowpower }}</span
         >
       </div>
     </div>
@@ -40,44 +40,22 @@
 
 <script setup>
 import { RouterLink } from 'vue-router'
-import { getNow } from '../api/index.js'
 import { ref, onMounted, watch } from 'vue'
 import { useWeatherStore } from '../stores/weather'
 
 const weatherStore = useWeatherStore()
-const cityid = ref(0)
-const city = ref('')
-const weather = ref('')
-const temperature = ref('')
-const winddirection = ref('')
-const windpower = ref('')
-const cityweather = ref([])
 const isPopupVisible = ref(false)
-
-const fetchWeatherData = async () => {
-  try {
-    const weatherRes = await getNow(cityid.value)
-    cityweather.value = weatherRes.data.lives[0]
-    weather.value = cityweather.value.weather
-    temperature.value = cityweather.value.temperature
-    winddirection.value = cityweather.value.winddirection
-    windpower.value = cityweather.value.windpower
-    city.value = cityweather.value.city
-  } catch (err) {
-    console.error('Error fetching data:', err)
-  }
-}
+const refreshKey = ref(0)
 
 onMounted(() => {
-  cityid.value = weatherStore.cityid
-  fetchWeatherData()
+  weatherStore.fetchNowWeather()
+  weatherStore.loadSavedCities() // 确保在组件挂载时加载保存的城市数据
 })
 
 watch(
   () => weatherStore.cityid,
-  (newCityid) => {
-    cityid.value = newCityid
-    fetchWeatherData()
+  () => {
+    weatherStore.fetchNowWeather()
   }
 )
 
@@ -88,7 +66,14 @@ const showPopup = () => {
 const hidePopup = () => {
   isPopupVisible.value = false
 }
+
+const refresh = () => {
+  refreshKey.value++
+  weatherStore.fetchNowWeather() // 确保在刷新 key 的同时重新获取数据
+  weatherStore.loadSavedCities() // 重新加载保存的城市数据
+}
 </script>
+
 <style scoped>
 .head {
   width: 100vw;
@@ -122,6 +107,7 @@ i {
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1002;
 }
 
 .popup-content {

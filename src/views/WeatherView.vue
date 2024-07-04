@@ -1,12 +1,12 @@
 <template>
   <p class="text-center text-white title">你正在预览{{ cityName }}的天气信息，可以通过右上角"+"号保存起来</p>
   <i v-if="!isCityAlreadySaved" class="iconfont icon-tianjia add " @click="saveToLocalStorage"></i>
-  <div class="text-white citytem">
-    <div class="text-center tem-box">
-      <p>当日气温是：{{ nowtemp }}摄氏度</p>
-      <p>当日天气是：{{ nowweather }}</p>
-      <p>当日风向是：{{ nowwind }}</p>
-      <p>当日风力是：{{ nowpower }}</p>
+  <div class="text-white" style="margin-top: 3rem;">
+    <div class="text-center">
+      <p style="margin-bottom: 1rem;">当日气温是：{{ nowtemp }}摄氏度</p>
+      <p style="margin-bottom: 1rem;">当日天气是：{{ nowweather }}</p>
+      <p style="margin-bottom: 1rem;">当日风向是：{{ nowwind }}</p>
+      <p style="margin-bottom: 1rem;">当日风力是：{{ nowpower }}</p>
     </div>
     <WeatherDisplay
       :day0="day0"
@@ -132,19 +132,10 @@ const saveToLocalStorage = () => {
   width: 100%;
   position: absolute;
   top: 5.2rem;
-  left: 0;
   right: 0;
   height: 2.5rem;
   line-height: 2.5rem;
-}
-
-.citytem {
-  margin-top: 3rem;
-}
-.tem-box{
-  p{
-    margin-bottom: 1rem;
-  }
+  z-index: 1000;
 }
 
 @media (max-width: 640px) {
