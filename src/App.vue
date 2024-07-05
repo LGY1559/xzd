@@ -17,4 +17,5 @@ import WeatherHead from './components/WeatherHead.vue'
   left: 0;
   right: 0;
 }
+
 </style>

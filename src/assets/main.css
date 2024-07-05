@@ -15,3 +15,10 @@
   fill: currentColor;
   overflow: hidden;
 }
+
+
+/* Firefox 的自定义滚动条样式 */
+html {
+  scrollbar-width: thin; /* 滚动条的宽度 */
+  scrollbar-color: #818181 rgb(0, 78, 113) /* 滚动条滑块和轨道的颜色 */
+}

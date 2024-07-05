@@ -60,11 +60,12 @@ const options = computed(() => ({
     left: 0,
     right: 0,
     top: 30,
-    bottom: 0
+    bottom: 20
   },
   xAxis: {
     type: 'category',
-    data: []
+    data: [],
+    show: false,
   },
   yAxis: {
     type: 'value',

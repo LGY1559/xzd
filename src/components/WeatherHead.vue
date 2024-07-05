@@ -8,7 +8,7 @@
       <div class="gap-4 flex items-center">
         <span class="text-lg">{{ weatherStore.cityName }}</span>
         <span class="text-sm"
-          >实时天气：{{ weatherStore.nowweather }} {{ weatherStore.nowtemp }}°C {{ weatherStore.nowwind }} {{ weatherStore.nowpower }}</span
+          >实时天气：{{ weatherStore.nowweather }} {{ weatherStore.nowtemp }}°C {{ weatherStore.nowwind }}风 {{ weatherStore.nowpower }}级</span
         >
       </div>
     </div>

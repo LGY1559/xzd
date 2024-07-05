@@ -1,7 +1,7 @@
 <template>
   <div class="text-white">
     <!-- 输入框，用于输入城市名称，绑定到 weatherStore 的 inputCity 属性，并监听输入事件 -->
-    <input type="text" placeholder="请输入城市名称" v-model="weatherStore.inputCity" @input="weatherStore.handleInput" />
+    <input type="text" placeholder="请输入城市名称" v-model="weatherStore.inputCity" @input="debouncedHandleInput" />
     <!-- 搜索结果显示区域，当 showSearchResults 为 true 时显示 -->
     <div class="scarch" v-if="weatherStore.showSearchResults">
       <!-- 如果没有搜索结果，显示提示信息 -->
@@ -40,13 +40,13 @@
 <script setup>
 import { useRouter } from 'vue-router'
 import { useWeatherStore } from '../stores/weather'
+import { debounce } from 'lodash'
 
 const router = useRouter()
 const weatherStore = useWeatherStore()
 
 // 处理城市点击事件，跳转到天气页面并传递城市信息
 const handleCityClick = (result) => {
-  console.log('Adcode:', result.adcode)
   weatherStore.clearInput() // 清空输入框
   router.push({
     name: 'weather',
@@ -63,6 +63,11 @@ const viewCityWeather = (city) => {
     query: { name: city.cityName }
   })
 }
+
+// 防抖处理输入事件
+const debouncedHandleInput = debounce((event) => {
+  weatherStore.handleInput(event)
+}, 500)
 </script>
 
 <style scoped lang="scss">

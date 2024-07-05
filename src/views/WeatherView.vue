@@ -97,11 +97,7 @@ const fetchWeatherData = async () => {
 const saveToLocalStorage = () => {
   const weatherData = {
     cityName: cityName,
-    adcode: adcode.value, // 添加 adcode
-    nowtemp: nowtemp.value,
-    nowweather: nowweather.value,
-    nowwind: nowwind.value,
-    nowpower: nowpower.value
+    adcode: adcode.value,
   }
 
   // 从 localStorage 中读取已有的天气数据数组，如果没有则创建一个新的数组
